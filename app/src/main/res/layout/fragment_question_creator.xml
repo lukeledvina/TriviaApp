@@ -74,14 +74,14 @@
         android:ems="10"
         android:hint="@string/third_wrong_answer_goes_here"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/save_question_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/second_wrong_answer_edittext" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/save_question_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"

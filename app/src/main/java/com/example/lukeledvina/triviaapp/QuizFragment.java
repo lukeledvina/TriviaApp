@@ -91,6 +91,10 @@ public class QuizFragment extends Fragment {
 
     @OnClick(R.id.next_question_button)
     protected void buttonNextClicked() {
+        firstAnswerButton.setEnabled(false);
+        secondAnswerButton.setEnabled(false);
+        thirdAnswerButton.setEnabled(false);
+        fourthAnswerButton.setEnabled(false);
 
         if (questionListPosition <= questionsList.size() - 1) {
 
@@ -101,6 +105,23 @@ public class QuizFragment extends Fragment {
 
         }
     }
+
+    private void disableAnswerButtons() {
+        firstAnswerButton.setEnabled(false);
+        secondAnswerButton.setEnabled(false);
+        thirdAnswerButton.setEnabled(false);
+        fourthAnswerButton.setEnabled(false);
+
+    }
+
+    private void enableAnswerButtons() {
+        firstAnswerButton.setEnabled(true);
+        secondAnswerButton.setEnabled(true);
+        thirdAnswerButton.setEnabled(true);
+        fourthAnswerButton.setEnabled(true);
+
+    }
+
 
     public void attachParent(QuizCallback quizCallback){
 
@@ -149,6 +170,7 @@ public class QuizFragment extends Fragment {
     }
 
     private void checkAnswer(String answer) {
+        disableAnswerButtons();
         //Increments questionListPostioton so we can go to the next question
         questionListPosition++;
         if (question.getCorrectAnswerInput().equals(answer)) {

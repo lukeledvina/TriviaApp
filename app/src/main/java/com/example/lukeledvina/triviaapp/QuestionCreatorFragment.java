@@ -53,7 +53,7 @@ public class QuestionCreatorFragment extends Fragment {
     protected void addQuestion() {
 
 
-            
+
 
 
 
@@ -66,7 +66,6 @@ public class QuestionCreatorFragment extends Fragment {
                 String thirdWrongAnswer = thirdWrongAnswerInput.getText().toString();
 
                 if (questionInput.getText().toString().isEmpty() || correctAnswerInput.getText().toString().isEmpty() || firstWrongAnswerInput.getText().toString().isEmpty() || secondWrongAnswerInput.getText().toString().isEmpty() || thirdWrongAnswerInput.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "All fields are required!", Toast.LENGTH_SHORT).show();
                     return;
 
 

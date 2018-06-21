@@ -1,6 +1,9 @@
 package com.example.lukeledvina.triviaapp;
 
-public class Question {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Question implements Parcelable{
 
     protected String quizQuestionInput;
     protected String correctAnswerInput;
@@ -16,6 +19,26 @@ public class Question {
         this.wrongAnswerTwoInput = wrongAnswerTwo;
         this.wrongAnswerThreeInput = wrongAnswerThree;
     }
+
+    protected Question(Parcel in) {
+        quizQuestionInput = in.readString();
+        correctAnswerInput = in.readString();
+        wrongAnswerOneInput = in.readString();
+        wrongAnswerTwoInput = in.readString();
+        wrongAnswerThreeInput = in.readString();
+    }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel in) {
+            return new Question(in);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
 
     public String getQuizQuestionInput() {
         return quizQuestionInput;
@@ -35,5 +58,19 @@ public class Question {
 
     public String getWrongAnswerThreeInput() {
         return wrongAnswerThreeInput;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(quizQuestionInput);
+        parcel.writeString(correctAnswerInput);
+        parcel.writeString(wrongAnswerOneInput);
+        parcel.writeString(wrongAnswerTwoInput);
+        parcel.writeString(wrongAnswerThreeInput);
     }
 }

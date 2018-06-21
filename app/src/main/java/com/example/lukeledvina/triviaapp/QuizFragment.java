@@ -42,8 +42,8 @@ public class QuizFragment extends Fragment {
     private List<Question> questionsList;
     private Question question;
     private int questionListPosition = 0;
-
-
+    private int correctAnswers = 0;
+    private QuizCallback quizCallback;
 
 
     @Nullable
@@ -62,27 +62,54 @@ public class QuizFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-    @OnClick(R.id.first_answer_button)
-    protected  void buttonOneClicked() {
 
+    @OnClick(R.id.first_answer_button)
+    protected void buttonOneClicked() {
+
+        checkAnswer(firstAnswerButton.getText().toString());
+    }
+
+    @OnClick(R.id.second_answer_button)
+    protected void buttonTwoClicked() {
+
+        checkAnswer(secondAnswerButton.getText().toString());
+    }
+
+    @OnClick(R.id.third_answer_button)
+    protected void buttonThreeClicked() {
+
+        checkAnswer(thirdAnswerButton.getText().toString());
 
     }
-    @OnClick(R.id.second_answer_button)
-    protected  void buttonTwoClicked() {
 
+    @OnClick(R.id.fourth_answer_button)
+    protected void buttonfourClicked() {
 
-    }@OnClick(R.id.third_answer_button)
-    protected  void buttonThreeClicked() {
+        checkAnswer(fourthAnswerButton.getText().toString());
 
+    }
 
-    }@OnClick(R.id.fourth_answer_button)
-    protected  void buttonfourClicked() {
+    @OnClick(R.id.next_question_button)
+    protected void buttonNextClicked() {
 
+        if (questionListPosition <= questionsList.size() - 1) {
 
-    }@OnClick(R.id.next_question_button)
-    protected  void buttonNextClicked() {
+            populateQuizContent();
+        } else {
+            //handling no more questions, taking user back to main activity
+            quizCallback.quizFinished(correctAnswers);
 
+        }
+    }
 
+    public void attachParent(QuizCallback quizCallback){
+
+        this.quizCallback = quizCallback;
+    }
+
+    public interface QuizCallback {
+
+        void quizFinished(int correctAnswers);
     }
 
     @Override
@@ -104,6 +131,38 @@ public class QuizFragment extends Fragment {
         buttonList.add(thirdAnswerButton);
         buttonList.add(fourthAnswerButton);
 
+        List<String> possibleAnswersList = new ArrayList<>();
+        possibleAnswersList.add(question.getCorrectAnswerInput());
+        possibleAnswersList.add(question.getWrongAnswerOneInput());
+        possibleAnswersList.add(question.getWrongAnswerTwoInput());
+        possibleAnswersList.add(question.getWrongAnswerThreeInput());
+
+        for (Button button : buttonList) {
+
+            int random = (int) Math.ceil(Math.random() * (possibleAnswersList.size() - 1));
+
+            //takes the random numbers from above and mixes the text to different buttons
+            button.setText(possibleAnswersList.get(random));
+            possibleAnswersList.remove(random);
+        }
 
     }
+
+    private void checkAnswer(String answer) {
+        //Increments questionListPostioton so we can go to the next question
+        questionListPosition++;
+        if (question.getCorrectAnswerInput().equals(answer)) {
+            //sets the text view to shjow the user they were correct
+            quizQuestion.setText(R.string.correct);
+            //Increments the correct answers the use r has gotten
+            correctAnswers++;
+
+
+        } else {
+            quizQuestion.setText(getString(R.string.wrong_answer_text, question.getCorrectAnswerInput()));
+        }
+
+    }
+
+
 }

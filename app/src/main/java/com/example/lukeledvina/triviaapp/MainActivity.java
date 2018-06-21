@@ -1,6 +1,8 @@
 package com.example.lukeledvina.triviaapp;
 
+import android.content.DialogInterface;
 import android.os.Parcelable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -11,7 +13,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements QuestionCreatorFragment.Callback{
+public class MainActivity extends AppCompatActivity implements QuestionCreatorFragment.Callback, QuizFragment.QuizCallback{
 
     private QuestionCreatorFragment questionCreatorFragment;
     private QuizFragment quizFragment;
@@ -58,10 +60,65 @@ public class MainActivity extends AppCompatActivity implements QuestionCreatorFr
         } else {
             //////////////////// ///launch fragment, pass in parcelable array
             quizFragment = QuizFragment.newInstance();
+            quizFragment.attachParent(this);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, quizFragment).commit();
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList(QUESTIONS_LIST, (ArrayList<? extends Parcelable>) questionsList);
+            quizFragment.setArguments(bundle);
 
         }
     }
+
+
+    @Override
+    public void quizFinished(int correctAnswers) {
+        getSupportFragmentManager().beginTransaction().remove(quizFragment).commit();
+
+        showQuizResultsAlertDialog(correctAnswers);
+    }
+    private void showQuizResultsAlertDialog(int correctAnswers) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Quiz Finished")
+                .setMessage(getString(R.string.number_of_correct_answers, correctAnswers))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                    //tells dialog what to do with the information
+                }).show();
+    }
+
+    @OnClick(R.id.delete_quiz_button)
+    protected void deleteQuizClicked() {
+
+        if(questionsList.isEmpty()) {
+            //handle toast for if there are no questions saved for thre quiz
+            Toast.makeText(this, "There is no quiz to be deleted. ", Toast.LENGTH_SHORT).show();
+        } else {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Quiz")
+                .setMessage("Are you sure you want to delete this quiz?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        questionsList.clear();
+                        dialogInterface.dismiss();
+                        Toast.makeText(MainActivity.this, "Quiz deleted", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
+    } }
+
+
+
 }
